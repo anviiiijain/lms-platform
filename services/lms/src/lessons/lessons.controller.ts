@@ -33,6 +33,11 @@ export class LessonsController {
     return this.lessons.remove(data.id);
   }
 
+  @MessagePattern({ cmd: 'lessons.reorder' })
+  reorderLessons(data: { courseId: string; lessonOrders: { lessonId: string; order: number }[] }) {
+    return this.lessons.reorderLessons(data.courseId, data.lessonOrders);
+  }
+
   @MessagePattern({ cmd: 'lessons.markComplete' })
   markComplete(data: { lessonId: string; userId: string }) {
     return this.lessons.markComplete(data.lessonId, data.userId);

@@ -52,6 +52,7 @@ model Lesson {
   course      Course             @relation(fields: [courseId], references: [id], onDelete: Cascade)
   completions LessonCompletion[]
   
+  @@unique([courseId, order])  // <CHANGE> Prevent duplicate orders in same course
   @@index([courseId])
   @@map("lessons")
 }
