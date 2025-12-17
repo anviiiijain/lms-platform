@@ -1,0 +1,20 @@
+{
+    "name": "lms-platform",
+    "version": "1.0.0",
+    "private": true,
+    "workspaces": [
+      "services/*",
+      "frontend",
+      "shared"
+    ],
+    "scripts": {
+      "install:all": "npm install && npm install --workspaces",
+      "dev:gateway": "cd services/api-gateway && npm run start:dev",
+      "dev:lms": "cd services/lms && npm run start:dev",
+      "dev:similar": "cd services/similar-courses && npm run start:dev",
+      "dev:frontend": "cd frontend && npm run dev",
+      "test:all": "npm run test --workspaces",
+      "lint:all": "npm run lint --workspaces",
+      "build:all": "npm run build --workspaces"
+    }
+  }
