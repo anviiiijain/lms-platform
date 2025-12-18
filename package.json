@@ -4,8 +4,7 @@
     "private": true,
     "workspaces": [
       "services/*",
-      "frontend",
-      "shared"
+      "frontend"
     ],
     "scripts": {
       "build:shared": "cd services/shared && npm run build",

@@ -1,24 +1,136 @@
 version: '3.8'
 
 services:
+
   postgres:
+
     image: postgres:15-alpine
-    container_name: lms-postgres
+
     restart: always
+
     environment:
+
       POSTGRES_USER: lms_user
+
       POSTGRES_PASSWORD: lms_password
+
       POSTGRES_DB: lms_db
+
     ports:
+
       - "5433:5432"
+
     volumes:
+
       - postgres_data:/var/lib/postgresql/data
+
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U lms_user -d lms_db"]
+
+      test: ["CMD-SHELL", "pg_isready -U lms_user"]
+
       interval: 10s
+
       timeout: 5s
+
       retries: 5
 
+  lms:
+
+    build:
+
+      context: .
+
+      dockerfile: services/lms/Dockerfile
+
+    restart: always
+
+    ports:
+
+      - "8001:8001"
+
+    environment:
+
+      DATABASE_URL: postgresql://lms_user:lms_password@postgres:5432/lms_db
+
+      PORT: 8001
+
+      JWT_SECRET: ${JWT_SECRET}
+
+      NODE_ENV: production
+
+    depends_on:
+
+      postgres:
+
+        condition: service_healthy
+
+  similar-courses:
+
+    build:
+
+      context: .
+
+      dockerfile: services/similar-courses/Dockerfile
+
+    restart: always
+
+    ports:
+
+      - "8002:8002"
+
+    environment:
+
+      DATABASE_URL: postgresql://lms_user:lms_password@postgres:5432/lms_db
+
+      PORT: 8002
+
+      NODE_ENV: production
+
+    depends_on:
+
+      postgres:
+
+        condition: service_healthy
+
+  api-gateway:
+
+    build:
+
+      context: .
+
+      dockerfile: services/api-gateway/Dockerfile
+
+    restart: always
+
+    ports:
+
+      - "8000:8000"
+
+    environment:
+
+      PORT: 8000
+
+      JWT_SECRET: ${JWT_SECRET}
+
+      LMS_SERVICE_HOST: lms
+
+      LMS_SERVICE_PORT: 8001
+
+      SIMILAR_COURSES_SERVICE_HOST: similar-courses
+
+      SIMILAR_COURSES_SERVICE_PORT: 8002
+
+      NODE_ENV: production
+
+    depends_on:
+
+      - lms
+
+      - similar-courses
+
 volumes:
+
   postgres_data:
-    driver: local
+
+
+
