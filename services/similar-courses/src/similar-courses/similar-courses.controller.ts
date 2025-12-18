@@ -7,7 +7,7 @@ export class SimilarCoursesController {
   constructor(private readonly similarCoursesService: SimilarCoursesService) {}
 
   @MessagePattern({ cmd: 'courses.findSimilar' })
-  async findSimilar(courseId: string) {
-    return this.similarCoursesService.findSimilar(courseId);
+  async findSimilar(data: { id: string }) {
+    return this.similarCoursesService.findSimilar(data.id);
   }
 }

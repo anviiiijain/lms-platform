@@ -5,19 +5,22 @@ import { RegisterDto, LoginDto } from '@lms-monorepo/shared';
 
 @Controller('auth')
 export class AuthController {
-  constructor(@Inject('LMS_SERVICE') private lmsClient: ClientProxy) {}
+  constructor(
+    @Inject('LMS_SERVICE')
+    private lmsClient: ClientProxy,
+  ) {}
 
   @Post('register')
-  async register(@Body() dto: RegisterDto) {
-    return firstValueFrom(
-      this.lmsClient.send({ cmd: 'auth.register' }, { dto }),
-    );
-  }
+async register(@Body() dto: RegisterDto) {
+  return firstValueFrom(
+    this.lmsClient.send({ cmd: 'auth.register' }, { dto }) 
+  );
+}
 
-  @Post('login')
-  async login(@Body() dto: LoginDto) {
-    return firstValueFrom(
-      this.lmsClient.send({ cmd: 'auth.login' }, { dto }),
-    );
-  }
+@Post('login')
+async login(@Body() dto: LoginDto) {
+  return firstValueFrom(
+    this.lmsClient.send({ cmd: 'auth.login' }, { dto }) 
+  );
+}
 }

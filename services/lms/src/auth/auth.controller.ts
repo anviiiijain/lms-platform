@@ -13,7 +13,7 @@ register(data: { dto: RegisterDto }) {
 }
 
   @MessagePattern({ cmd: "auth.login" })
-  login(dto: LoginDto) {
-    return this.auth.login(dto)
+  login(data: {dto: LoginDto}) {
+    return this.auth.login(data.dto)
   }
 }

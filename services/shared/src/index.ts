@@ -14,3 +14,6 @@ export * from './dto/lessons/reorder-lesson.dto';
 // Prisma
 export * from './prisma/prisma.service';
 export * from './prisma/prisma.module';
+
+//Error
+export * from './dto/error-response.dto'

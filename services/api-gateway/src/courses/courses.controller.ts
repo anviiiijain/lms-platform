@@ -6,24 +6,26 @@ import {
   Delete,
   Body,
   Param,
+  Query,
   UseGuards,
   Request,
+  Inject,
 } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
-import { Inject } from '@nestjs/common';
 import { firstValueFrom } from 'rxjs';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CreateCourseDto, UpdateCourseDto } from '@lms-monorepo/shared';
 @Controller('courses')
+@UseGuards(JwtAuthGuard)
 export class CoursesController {
   constructor(
-    @Inject('LMS_SERVICE') private lmsClient: ClientProxy,
+    @Inject('LMS_SERVICE')
+    private lmsClient: ClientProxy,
     @Inject('SIMILAR_COURSES_SERVICE')
     private readonly similarClient: ClientProxy,
   ) {}
 
   @Post()
-  @UseGuards(JwtAuthGuard)
   async create(@Body() dto: CreateCourseDto) {
     return firstValueFrom(
       this.lmsClient.send({ cmd: 'courses.create' }, { dto }),
@@ -31,7 +33,6 @@ export class CoursesController {
   }
 
   @Get()
-  @UseGuards(JwtAuthGuard)
   async findAll(@Request() req) {
     return firstValueFrom(
       this.lmsClient.send(
@@ -42,29 +43,23 @@ export class CoursesController {
   }
 
   @Get(':id/similar')
-  @UseGuards(JwtAuthGuard)
-  async findSimilar(@Param('id') id: string, @Request() req) {
+  async findSimilar(@Param('id') id: string) {
     return firstValueFrom(
       this.similarClient.send(
         { cmd: 'courses.findSimilar' },
-        { id, userId: req.user.userId },
+        { id },
       ),
     );
   }
 
   @Get(':id')
-  @UseGuards(JwtAuthGuard)
-  async findOne(@Param('id') id: string, @Request() req) {
+  async findOne(@Param('id') id: string) {
     return firstValueFrom(
-      this.lmsClient.send(
-        { cmd: 'courses.findOne' },
-        { id, userId: req.user.userId },
-      ),
+      this.lmsClient.send({ cmd: 'courses.findOne' }, { id }),
     );
   }
 
   @Put(':id')
-  @UseGuards(JwtAuthGuard)
   async update(@Param('id') id: string, @Body() dto: UpdateCourseDto) {
     return firstValueFrom(
       this.lmsClient.send({ cmd: 'courses.update' }, { id, dto }),
@@ -72,7 +67,6 @@ export class CoursesController {
   }
 
   @Delete(':id')
-  @UseGuards(JwtAuthGuard)
   async remove(@Param('id') id: string) {
     return firstValueFrom(
       this.lmsClient.send({ cmd: 'courses.delete' }, { id }),

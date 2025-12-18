@@ -66,3 +66,7 @@ API Gateway: http://localhost:8000
 ## Development
 
 See individual service READMEs in `/services/*` and `/frontend`
+
+### Error Handling Pattern: Global Exception Filters
+
+All error handling is centralized using NestJS exception filters. No try-catch blocks in controllers.
