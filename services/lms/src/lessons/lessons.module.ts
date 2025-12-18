@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { LessonsService } from './lessons.service';
 import { LessonsController } from './lessons.controller';
-import { PrismaModule } from '../prisma/prisma.module';
+import { PrismaModule } from '@lms-monorepo/shared';
 
 @Module({
   imports: [PrismaModule],

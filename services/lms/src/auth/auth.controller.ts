@@ -1,8 +1,7 @@
 import { Controller } from "@nestjs/common"
 import { MessagePattern } from "@nestjs/microservices"
 import  { AuthService } from "./auth.service"
-import type { RegisterDto } from "./dto/register.dto"
-import type { LoginDto } from "./dto/login.dto"
+import { RegisterDto, LoginDto } from '@lms-monorepo/shared';
 
 @Controller()
 export class AuthController {

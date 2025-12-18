@@ -1,7 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
-import { CreateCourseDto } from './dto/create-course.dto';
-import { UpdateCourseDto } from './dto/update-course.dto';
+import {
+  CreateCourseDto,
+  UpdateCourseDto,
+  PrismaService,
+} from '@lms-monorepo/shared';
 
 @Injectable()
 export class CoursesService {
@@ -38,7 +40,9 @@ export class CoursesService {
               lesson: { courseId: course.id },
             },
           });
-          completionPercentage = Math.round((completedCount / totalLessons) * 100);
+          completionPercentage = Math.round(
+            (completedCount / totalLessons) * 100,
+          );
         }
 
         return {

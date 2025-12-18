@@ -1,7 +1,5 @@
 import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
-import { CreateLessonDto } from './dto/create-lesson.dto';
-import { UpdateLessonDto } from './dto/update-lesson.dto';
+import { CreateLessonDto,UpdateLessonDto,PrismaService } from '@lms-monorepo/shared';
 
 @Injectable()
 export class LessonsService {

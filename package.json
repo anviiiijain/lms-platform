@@ -8,6 +8,7 @@
       "shared"
     ],
     "scripts": {
+      "build:shared": "cd services/shared && npm run build",
       "install:all": "npm install && npm install --workspaces",
       "dev:gateway": "cd services/api-gateway && npm run start:dev",
       "dev:lms": "cd services/lms && npm run start:dev",

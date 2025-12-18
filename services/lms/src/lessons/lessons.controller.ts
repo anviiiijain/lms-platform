@@ -1,8 +1,7 @@
 import { Controller } from '@nestjs/common';
 import { MessagePattern } from '@nestjs/microservices';
 import { LessonsService } from './lessons.service';
-import { CreateLessonDto } from './dto/create-lesson.dto';
-import { UpdateLessonDto } from './dto/update-lesson.dto';
+import { CreateLessonDto,UpdateLessonDto } from '@lms-monorepo/shared';
 
 @Controller()
 export class LessonsController {

@@ -1,9 +1,7 @@
 import { Injectable, ConflictException, UnauthorizedException } from "@nestjs/common"
 import  { JwtService } from "@nestjs/jwt"
-import  { PrismaService } from "../prisma/prisma.service"
 import * as bcrypt from "bcrypt"
-import type { RegisterDto } from "./dto/register.dto"
-import type { LoginDto } from "./dto/login.dto"
+import { PrismaService, RegisterDto, LoginDto } from '@lms-monorepo/shared';
 
 @Injectable()
 export class AuthService {
