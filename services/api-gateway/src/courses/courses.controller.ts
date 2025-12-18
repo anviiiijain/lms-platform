@@ -16,7 +16,11 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CreateCourseDto, UpdateCourseDto } from '@lms-monorepo/shared';
 @Controller('courses')
 export class CoursesController {
-  constructor(@Inject('LMS_SERVICE') private lmsClient: ClientProxy) {}
+  constructor(
+    @Inject('LMS_SERVICE') private lmsClient: ClientProxy,
+    @Inject('SIMILAR_COURSES_SERVICE')
+    private readonly similarClient: ClientProxy,
+  ) {}
 
   @Post()
   @UseGuards(JwtAuthGuard)
@@ -33,6 +37,17 @@ export class CoursesController {
       this.lmsClient.send(
         { cmd: 'courses.findAll' },
         { userId: req.user.userId },
+      ),
+    );
+  }
+
+  @Get(':id/similar')
+  @UseGuards(JwtAuthGuard)
+  async findSimilar(@Param('id') id: string, @Request() req) {
+    return firstValueFrom(
+      this.similarClient.send(
+        { cmd: 'courses.findSimilar' },
+        { id, userId: req.user.userId },
       ),
     );
   }

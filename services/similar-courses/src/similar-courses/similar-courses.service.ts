@@ -1,5 +1,5 @@
 import { PrismaService } from '@lms-monorepo/shared';
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 
 @Injectable()
 export class SimilarCoursesService {
@@ -11,6 +11,11 @@ export class SimilarCoursesService {
           where: { id: courseId },
           select: { id: true, tags: true }
         });
+
+        // Ensure that the course exists
+        if (!targetCourse) {
+            throw new NotFoundException(`Course with ID ${courseId} not found`)
+          }
       
         // Find courses with any matching tags
         const similarCourses = await this.prisma.course.findMany({

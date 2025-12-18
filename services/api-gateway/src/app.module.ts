@@ -24,6 +24,18 @@ import { UsersController } from './users/users.controller';
         }),
         inject: [ConfigService],
       },
+      {
+        name: 'SIMILAR_COURSES_SERVICE',
+        imports: [ConfigModule],
+        useFactory: (configService: ConfigService) => ({
+          transport: Transport.TCP,
+          options: {
+            host: configService.get('SIMILAR_COURSES_SERVICE_HOST', 'localhost'),
+            port: configService.get('SIMILAR_COURSES_SERVICE_PORT', 8002),
+          },
+        }),
+        inject: [ConfigService],
+      },
     ]),
     
     AuthModule,
