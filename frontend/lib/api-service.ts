@@ -9,6 +9,8 @@ import type {
   CreateLessonRequest,
   UpdateLessonRequest,
   SimilarCourse,
+  PaginatedCoursesResponse,
+  CoursesQueryParams,
 } from "@/types/course.types"
 import type { UserStats, RecentActivity, UserProfile } from "@/types/stats.types"
 
@@ -21,7 +23,18 @@ export const authApi = {
 
 // Courses API
 export const coursesApi = {
-  getAll: () => api.get<Course[]>(API_ROUTES.COURSES),
+  getAll: (params?: CoursesQueryParams) => {
+    const queryParams = new URLSearchParams()
+    if (params?.page) queryParams.append("page", params.page.toString())
+    if (params?.limit) queryParams.append("limit", params.limit.toString())
+    if (params?.search) queryParams.append("search", params.search)
+    if (params?.tag) queryParams.append("tag", params.tag)
+
+    const queryString = queryParams.toString()
+    const url = queryString ? `${API_ROUTES.COURSES}?${queryString}` : API_ROUTES.COURSES
+
+    return api.get<PaginatedCoursesResponse>(url)
+  },
 
   getById: (id: string) => api.get<Course>(API_ROUTES.COURSE_BY_ID(id)),
 

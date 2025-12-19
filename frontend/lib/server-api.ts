@@ -1,12 +1,26 @@
-import type { Course } from "@/types/course.types"
+import type { Course, PaginatedCoursesResponse } from "@/types/course.types"
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api"
 
 // Server-side API calls (no localStorage access)
-export async function fetchCourses(): Promise<Course[]> {
+export async function fetchCourses(params?: {
+  page?: number
+  limit?: number
+  search?: string
+  tag?: string
+}): Promise<PaginatedCoursesResponse> {
   try {
-    const res = await fetch(`${API_BASE_URL}/courses`, {
-      cache: "no-store", // Always fetch fresh data
+    const queryParams = new URLSearchParams()
+    if (params?.page) queryParams.append("page", params.page.toString())
+    if (params?.limit) queryParams.append("limit", params.limit.toString())
+    if (params?.search) queryParams.append("search", params.search)
+    if (params?.tag) queryParams.append("tag", params.tag)
+
+    const queryString = queryParams.toString()
+    const url = queryString ? `${API_BASE_URL}/courses?${queryString}` : `${API_BASE_URL}/courses`
+
+    const res = await fetch(url, {
+      cache: "no-store",
       headers: {
         "Content-Type": "application/json",
       },
@@ -14,13 +28,33 @@ export async function fetchCourses(): Promise<Course[]> {
 
     if (!res.ok) {
       console.error(`Failed to fetch courses: ${res.status} ${res.statusText}`)
-      return []
+      return {
+        data: [],
+        pagination: {
+          total: 0,
+          page: 1,
+          limit: params?.limit || 10,
+          totalPages: 0,
+          hasNextPage: false,
+          hasPrevPage: false,
+        },
+      }
     }
 
     return res.json()
   } catch (error) {
     console.error("Error fetching courses:", error)
-    return []
+    return {
+      data: [],
+      pagination: {
+        total: 0,
+        page: 1,
+        limit: params?.limit || 10,
+        totalPages: 0,
+        hasNextPage: false,
+        hasPrevPage: false,
+      },
+    }
   }
 }
 
