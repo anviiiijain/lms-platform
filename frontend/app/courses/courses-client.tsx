@@ -95,14 +95,14 @@ export function CoursesClient({
               {isLoading ? "Loading..." : `${courses.length} courses on this page`}
             </p>
           </div>
-          {isAuthenticated && (
+          {/* {isAuthenticated && (
             <Link href="/courses/create">
               <Button size="lg" className="w-full md:w-auto">
                 <Plus className="mr-2 h-5 w-5" />
                 Create Course
               </Button>
             </Link>
-          )}
+          )} */}
         </div>
 
         {/* Search and Filter Bar */}
@@ -158,14 +158,14 @@ export function CoursesClient({
               ? "Try adjusting your search or filter to find what you're looking for."
               : "Get started by creating your first course and begin your learning journey."}
           </p>
-          {!searchQuery && !selectedTag && isAuthenticated && (
+          {/* {!searchQuery && !selectedTag && isAuthenticated && (
             <Link href="/courses/create">
               <Button size="lg">
                 <Plus className="mr-2 h-5 w-5" />
                 Create Course
               </Button>
             </Link>
-          )}
+          )} */}
         </div>
       )}
 

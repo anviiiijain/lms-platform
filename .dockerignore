@@ -1,12 +1,46 @@
-node_modules
-dist
-build
-*.log
-.env*
+# Dependencies
+**/node_modules
+
+# Build outputs
+**/dist
+**/build
+**/.next
+**/out
+
+# Testing
+**/coverage
+**/.nyc_output
+**/*.test.ts
+**/*.spec.ts
+**/*.test.js
+**/*.spec.js
+
+# Environment & secrets
+**/.env
+**/.env.*
+!**/.env.example
+**/*.pem
+
+# Logs
+**/*.log
+**/.npm
+
+# IDE & editors
+**/.vscode
+**/.idea
+**/*.swp
+**/*.swo
+**/*~
+
+# OS files
+**/.DS_Store
+**/Thumbs.db
+
+# Git
 .git
-.DS_Store
-coverage
-*.test.ts
-*.spec.ts
-.vscode
-.idea
+.gitignore
+.gitattributes
+
+# Cache
+**/.eslintcache
+**/.cache
