@@ -1,22 +1,40 @@
 export interface CourseProgress {
-    courseId: string;
-    courseTitle: string;
-    completedLessons: number;
-    totalLessons: number;
-    completionPercentage: number;
+    courseId: string
+    courseTitle: string
+    totalLessons: number
+    completedLessons: number
+    completionPercentage: number
   }
   
   export interface RecentActivity {
-    id: string;
-    lessonTitle: string;
-    courseTitle: string;
-    completedAt: string;
+    lessonId: string
+    lessonTitle: string
+    courseId: string
+    courseTitle: string
+    completedAt: string
+  }
+  
+  export interface UserProfile {
+    id: string
+    email: string
+    firstName: string
+    lastName: string
+    createdAt: string
+    updatedAt: string
   }
   
   export interface UserStats {
-    coursesEnrolled: number;
-    lessonsCompleted: number;
-    overallProgress: number;
-    courseProgress: CourseProgress[];
-    recentActivity: RecentActivity[];
+    user: {
+      id: string
+      email: string
+      firstName: string
+      lastName: string
+    }
+    statistics: {
+      totalLessonsCompleted: number
+      totalCoursesStarted: number
+      totalCoursesCompleted: number
+    }
+    coursesProgress: CourseProgress[]
   }
+  

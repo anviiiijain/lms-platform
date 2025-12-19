@@ -24,7 +24,8 @@ import { toast } from 'sonner'
 // Validation schema
 const registerSchema = z
   .object({
-    name: z.string().min(2, 'Name must be at least 2 characters'),
+    firstName: z.string().min(2, 'Name must be at least 2 characters'),
+    lastName: z.string().min(2, 'Name must be at least 2 characters'),
     email: z.string().email('Invalid email address'),
     password: z.string().min(6, 'Password must be at least 6 characters'),
     confirmPassword: z.string(),
@@ -59,7 +60,7 @@ export default function RegisterPage() {
       AuthService.saveUserId(response.user.id)
 
       toast('Registration successful!', {
-        description: `Welcome, ${response.user.name}!`,
+        description: `Welcome, ${response.user.firstName}!`,
       })
 
       // Redirect to courses page
@@ -87,17 +88,32 @@ export default function RegisterPage() {
         </CardHeader>
         <form onSubmit={handleSubmit(onSubmit)}>
           <CardContent className='space-y-4'>
+            <div className='grid grid-cols-2 space-x-4'>
+
             <div className='space-y-2'>
-              <Label htmlFor='name'>Name</Label>
+              <Label htmlFor='firstName'>First Name</Label>
               <Input
-                id='name'
+                id='firstName'
                 type='text'
-                placeholder='John Doe'
-                {...register('name')}
+                placeholder='John'
+                {...register('firstName')}
               />
-              {errors.name && (
-                <p className='text-sm text-red-500'>{errors.name.message}</p>
+              {errors.firstName && (
+                <p className='text-sm text-red-500'>{errors.firstName.message}</p>
               )}
+            </div>
+            <div className='space-y-2'>
+              <Label htmlFor='lastName'>Last Name</Label>
+              <Input
+                id='lastName'
+                type='text'
+                placeholder='Doe'
+                {...register('lastName')}
+              />
+              {errors.lastName && (
+                <p className='text-sm text-red-500'>{errors.lastName.message}</p>
+              )}
+            </div>
             </div>
 
             <div className='space-y-2'>
@@ -143,7 +159,7 @@ export default function RegisterPage() {
               )}
             </div>
           </CardContent>
-          <CardFooter className='flex flex-col space-y-4'>
+          <CardFooter className='flex flex-col space-y-4 mt-4'>
             <Button type='submit' className='w-full' disabled={isLoading}>
               {isLoading ? 'Creating account...' : 'Create Account'}
             </Button>

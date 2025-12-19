@@ -51,7 +51,7 @@ export default function LoginPage() {
       AuthService.saveUserId(response.user.id)
 
       toast('Login successful!', {
-        description: `Welcome back, ${response.user.name}`,
+        description: `Welcome back, ${response.user.firstName}`,
       })
 
       // Redirect to courses page
@@ -107,7 +107,7 @@ export default function LoginPage() {
               )}
             </div>
           </CardContent>
-          <CardFooter className='flex flex-col space-y-4'>
+          <CardFooter className='flex flex-col space-y-4 mt-4'>
             <Button type='submit' className='w-full' disabled={isLoading}>
               {isLoading ? 'Logging in...' : 'Login'}
             </Button>
