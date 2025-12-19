@@ -14,7 +14,11 @@ import {
 import { ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { CreateCourseDto, UpdateCourseDto } from '@lms-monorepo/shared';
+import {
+  CreateCourseDto,
+  PaginationDto,
+  UpdateCourseDto,
+} from '@lms-monorepo/shared';
 @Controller('courses')
 export class CoursesController {
   constructor(
@@ -24,7 +28,7 @@ export class CoursesController {
     private readonly similarClient: ClientProxy,
   ) {}
 
-@UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Post()
   async create(@Body() dto: CreateCourseDto) {
     return firstValueFrom(
@@ -33,33 +37,32 @@ export class CoursesController {
   }
 
   @Get()
-  async findAll(@Request() req) {
+  async findAll(@Request() req, @Query() pagination: PaginationDto) {
+    const userId = req?.user?.userId ?? null;
+
     return firstValueFrom(
-      this.lmsClient.send(
-        { cmd: 'courses.findAll' },
-        { userId: req?.user?.userId },
-      ),
+      this.lmsClient.send({ cmd: 'courses.findAll' }, { userId, pagination }),
     );
   }
 
   @Get(':id/similar')
   async findSimilar(@Param('id') id: string) {
     return firstValueFrom(
-      this.similarClient.send(
-        { cmd: 'courses.findSimilar' },
-        { id },
-      ),
+      this.similarClient.send({ cmd: 'courses.findSimilar' }, { id }),
     );
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string,@Request() req) {
+  async findOne(@Param('id') id: string, @Request() req) {
     return firstValueFrom(
-      this.lmsClient.send({ cmd: 'courses.findOne' }, { id ,  userId: req?.user?.userId,}),
+      this.lmsClient.send(
+        { cmd: 'courses.findOne' },
+        { id, userId: req?.user?.userId },
+      ),
     );
   }
 
-@UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Put(':id')
   async update(@Param('id') id: string, @Body() dto: UpdateCourseDto) {
     return firstValueFrom(
@@ -67,7 +70,7 @@ export class CoursesController {
     );
   }
 
-@UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   async remove(@Param('id') id: string) {
     return firstValueFrom(

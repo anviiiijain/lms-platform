@@ -1,7 +1,11 @@
 import { Controller } from '@nestjs/common';
 import { MessagePattern } from '@nestjs/microservices';
 import { CoursesService } from './courses.service';
-import { CreateCourseDto,UpdateCourseDto } from '@lms-monorepo/shared';
+import {
+  CreateCourseDto,
+  PaginationDto,
+  UpdateCourseDto,
+} from '@lms-monorepo/shared';
 
 @Controller()
 export class CoursesController {
@@ -13,8 +17,8 @@ export class CoursesController {
   }
 
   @MessagePattern({ cmd: 'courses.findAll' })
-  findAll(data: { userId?: string }) {
-    return this.courses.findAll(data.userId);
+  findAll(data: { userId?: string; pagination?: PaginationDto }) {
+    return this.courses.findAll(data.userId, data.pagination);
   }
 
   @MessagePattern({ cmd: 'courses.findOne' })

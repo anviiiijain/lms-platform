@@ -3,6 +3,8 @@ import {
   CreateCourseDto,
   UpdateCourseDto,
   PrismaService,
+  PaginationDto,
+  PaginatedResponse,
 } from '@lms-monorepo/shared';
 
 @Injectable()
@@ -19,12 +21,40 @@ export class CoursesService {
     });
   }
 
-  async findAll(userId?: string) {
+  async findAll(
+    userId?: string,
+    pagination?: PaginationDto,
+  ): Promise<PaginatedResponse<any>> {
+    const page = pagination?.page || 1;
+    const limit = pagination?.limit || 10;
+    const skip = (page - 1) * limit;
+
+    // Build filter conditions
+    const where: any = {};
+
+    if (pagination?.search) {
+      where.OR = [
+        { title: { contains: pagination.search, mode: 'insensitive' } },
+        { description: { contains: pagination.search, mode: 'insensitive' } },
+      ];
+    }
+
+    if (pagination?.tag) {
+      where.tags = { has: pagination.tag };
+    }
+
+    // Get total count for pagination
+    const total = await this.prisma.course.count({ where });
+
+    // Fetch paginated courses
     const courses = await this.prisma.course.findMany({
+      where,
       include: {
         lessons: true,
       },
       orderBy: { createdAt: 'desc' },
+      skip,
+      take: limit,
     });
 
     // Calculate completion percentage for each course
@@ -58,7 +88,19 @@ export class CoursesService {
       }),
     );
 
-    return coursesWithCompletion;
+    const totalPages = Math.ceil(total / limit);
+
+    return {
+      data: coursesWithCompletion,
+      meta: {
+        total,
+        page,
+        limit,
+        totalPages,
+        hasNextPage: page < totalPages,
+        hasPreviousPage: page > 1,
+      },
+    };
   }
 
   async findOne(id: string, userId?: string) {

@@ -15,5 +15,6 @@ export * from './dto/lessons/reorder-lesson.dto';
 export * from './prisma/prisma.service';
 export * from './prisma/prisma.module';
 
-//Error
-export * from './dto/error-response.dto'
+//Common
+export * from './dto/common/error-response.dto'
+export * from './dto/common/pagination.dto'
