@@ -1,0 +1,231 @@
+{
+  "info": {
+    "name": "LMS Platform API",
+    "description": "Postman collection",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{jwt_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:8000/api" },
+    { "key": "jwt_token", "value": "" },
+    { "key": "user_id", "value": "" },
+    { "key": "course_id", "value": "" },
+    { "key": "lesson_id", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "auth": { "type": "noauth" },
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john.doe@example.com\",\n  \"password\": \"SecurePass123!\",\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\"\n}"
+            },
+            "url": "{{base_url}}/auth/register"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "pm.collectionVariables.set('jwt_token', res.access_token);",
+                  "pm.collectionVariables.set('user_id', res.user.id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "auth": { "type": "noauth" },
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john.doe@example.com\",\n  \"password\": \"SecurePass123!\"\n}"
+            },
+            "url": "{{base_url}}/auth/login"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "pm.collectionVariables.set('jwt_token', res.access_token);",
+                  "pm.collectionVariables.set('user_id', res.user.id);"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Courses",
+      "item": [
+        {
+          "name": "Get Courses",
+          "request": {
+            "method": "GET",
+            "auth": { "type": "noauth" },
+            "url": "{{base_url}}/courses"
+          }
+        },
+        {
+          "name": "Create Course",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Introduction to Web Development\",\n  \"description\": \"Learn HTML, CSS, and JavaScript\",\n  \"tags\": [\"web\", \"html\", \"css\", \"js\"]\n}"
+            },
+            "url": "{{base_url}}/courses"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "pm.collectionVariables.set('course_id', res.id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get Course by ID",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/courses/{{course_id}}"
+          }
+        },
+        {
+          "name": "Update Course",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Advanced Web Development\",\n  \"tags\": [\"advanced\", \"web\"]\n}"
+            },
+            "url": "{{base_url}}/courses/{{course_id}}"
+          }
+        },
+        {
+          "name": "Delete Course",
+          "request": {
+            "method": "DELETE",
+            "url": "{{base_url}}/courses/{{course_id}}"
+          }
+        },
+        {
+          "name": "Similar Courses",
+          "request": {
+            "method": "GET",
+            "auth": { "type": "noauth" },
+            "url": "{{base_url}}/courses/{{course_id}}/similar"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Lessons",
+      "item": [
+        {
+          "name": "Create Lesson",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"courseId\": \"{{course_id}}\",\n  \"title\": \"Getting Started with HTML\",\n  \"content\": \"# HTML Basics\",\n  \"order\": 1\n}"
+            },
+            "url": "{{base_url}}/lessons"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "pm.collectionVariables.set('lesson_id', res.id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get Lessons by Course",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/lessons?courseId={{course_id}}"
+          }
+        },
+        {
+          "name": "Complete Lesson",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/lessons/{{lesson_id}}/complete"
+          }
+        },
+        {
+          "name": "Reorder Lesson",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"lessonId\": \"{{lesson_id}}\",\n  \"newOrder\": 2\n}"
+            },
+            "url": "{{base_url}}/lessons/reorder"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "My Profile",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/users/me/profile"
+          }
+        },
+        {
+          "name": "My Stats",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/users/me/stats"
+          }
+        },
+        {
+          "name": "My Activity",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/users/me/activity?limit=10"
+          }
+        }
+      ]
+    }
+  ]
+}
