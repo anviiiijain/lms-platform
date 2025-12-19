@@ -16,7 +16,6 @@ import { firstValueFrom } from 'rxjs';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CreateCourseDto, UpdateCourseDto } from '@lms-monorepo/shared';
 @Controller('courses')
-@UseGuards(JwtAuthGuard)
 export class CoursesController {
   constructor(
     @Inject('LMS_SERVICE')
@@ -25,6 +24,7 @@ export class CoursesController {
     private readonly similarClient: ClientProxy,
   ) {}
 
+@UseGuards(JwtAuthGuard)
   @Post()
   async create(@Body() dto: CreateCourseDto) {
     return firstValueFrom(
@@ -37,7 +37,7 @@ export class CoursesController {
     return firstValueFrom(
       this.lmsClient.send(
         { cmd: 'courses.findAll' },
-        { userId: req.user.userId },
+        { userId: req?.user?.userId },
       ),
     );
   }
@@ -53,12 +53,13 @@ export class CoursesController {
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string) {
+  async findOne(@Param('id') id: string,@Request() req) {
     return firstValueFrom(
-      this.lmsClient.send({ cmd: 'courses.findOne' }, { id }),
+      this.lmsClient.send({ cmd: 'courses.findOne' }, { id ,  userId: req?.user?.userId,}),
     );
   }
 
+@UseGuards(JwtAuthGuard)
   @Put(':id')
   async update(@Param('id') id: string, @Body() dto: UpdateCourseDto) {
     return firstValueFrom(
@@ -66,6 +67,7 @@ export class CoursesController {
     );
   }
 
+@UseGuards(JwtAuthGuard)
   @Delete(':id')
   async remove(@Param('id') id: string) {
     return firstValueFrom(
